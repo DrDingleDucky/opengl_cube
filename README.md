@@ -1,3 +1,3 @@
-# Opengl Cube
+# OpenGL Cube
 
 Playing around with OpenGL. 
