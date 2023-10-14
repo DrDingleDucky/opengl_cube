@@ -1,3 +1,6 @@
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
 #include <fstream>
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
@@ -60,10 +63,10 @@ int main()
 
     stbi_set_flip_vertically_on_load(true);
 
-    const unsigned windowWidth = 600;
-    const unsigned windowHeight = 600;
+    const unsigned windowWidth = 1200;
+    const unsigned windowHeight = 700;
 
-    GLFWwindow *window = glfwCreateWindow(windowWidth, windowWidth, "Hello Window", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(windowWidth, windowHeight, "Hello Window", NULL, NULL);
 
     if (!window)
     {
@@ -76,7 +79,7 @@ int main()
 
     gladLoadGL();
 
-    glViewport(0, 0, windowWidth, windowWidth);
+    glViewport(0, 0, 600, 600);
 
     std::string vertexShaderSource = readFile("shaders/vert.glsl");
     std::string fragmentShaderSource = readFile("shaders/frag.glsl");
@@ -185,6 +188,12 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
     while (!glfwWindowShouldClose(window))
     {
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -207,7 +216,7 @@ int main()
 
         model = glm::rotate(model, glm::radians(rotation), glm::vec3(sin(previousTime), sin(previousTime), cos(previousTime)));
         view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-        projection = glm::perspective(glm::radians(45.0f), (float)(windowWidth / windowWidth), 0.1f, 100.0f);
+        projection = glm::perspective(glm::radians(45.0f), (float)(1), 0.1f, 100.0f);
 
         int modelLocation = glGetUniformLocation(shaderProgram, "model");
         glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
@@ -221,8 +230,16 @@ int main()
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        glfwSwapBuffers(window);
         glfwPollEvents();
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGui::ShowDemoWindow();
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        glfwSwapBuffers(window);
     }
 
     glDeleteVertexArrays(1, &vertexArrayObject);
@@ -231,6 +248,9 @@ int main()
     glDeleteBuffers(1, &vertexBufferObject3);
     glDeleteTextures(1, &texture);
     glDeleteProgram(shaderProgram);
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     glfwTerminate();
     return EXIT_SUCCESS;
