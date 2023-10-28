@@ -12,35 +12,30 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
-std::string readFile(const char* filePath)
-{
+std::string readFile(const char *filePath) {
     std::ifstream file(filePath);
     std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     return content;
 }
 
-GLuint compileShader(GLuint type, const GLchar* source)
-{
+GLuint compileShader(GLuint type, const GLchar *source) {
     GLuint shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, NULL);
     glCompileShader(shader);
     return shader;
 }
 
-GLuint createProgram(GLuint vertexShader, GLuint fragmentShader)
-{
+GLuint createProgram(GLuint vertexShader, GLuint fragmentShader) {
     GLuint shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
-
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
     return shaderProgram;
 }
 
-GLuint createBuffer(GLenum bufferType, GLsizeiptr bufferSize, const void* data, GLenum usage)
-{
+GLuint createBuffer(GLenum bufferType, GLsizeiptr bufferSize, const void *data, GLenum usage) {
     GLuint buffer;
     glGenBuffers(1, &buffer);
     glBindBuffer(bufferType, buffer);
@@ -49,10 +44,8 @@ GLuint createBuffer(GLenum bufferType, GLsizeiptr bufferSize, const void* data, 
     return buffer;
 }
 
-int main()
-{
-    if (!glfwInit())
-    {
+int main() {
+    if (!glfwInit()) {
         std::cout << "faild to init glfw\n";
         return EXIT_FAILURE;
     }
@@ -66,10 +59,9 @@ int main()
     const unsigned windowWidth = 1200;
     const unsigned windowHeight = 700;
 
-    GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Hello Window", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(windowWidth, windowHeight, "Hello Window", NULL, NULL);
 
-    if (!window)
-    {
+    if (!window) {
         std::cout << "failed to create glfw window\n";
         glfwTerminate();
         return EXIT_FAILURE;
@@ -84,8 +76,8 @@ int main()
     std::string vertexShaderSource = readFile("shaders/vert.glsl");
     std::string fragmentShaderSource = readFile("shaders/frag.glsl");
 
-    const GLchar* vsSource = vertexShaderSource.c_str();
-    const GLchar* fsSource = fragmentShaderSource.c_str();
+    const GLchar *vsSource = vertexShaderSource.c_str();
+    const GLchar *fsSource = fragmentShaderSource.c_str();
 
     float vertices[] = {
         // positions          // colors          // coords
@@ -129,8 +121,7 @@ int main()
         0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
         0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
         -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
-    };
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f};
 
     GLuint vertexShader = compileShader(GL_VERTEX_SHADER, vsSource);
     GLuint fragmentShader = compileShader(GL_FRAGMENT_SHADER, fsSource);
@@ -147,19 +138,19 @@ int main()
     GLuint vertexBufferObject3 = createBuffer(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject1);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLuint), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLuint), (void *)0);
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject2);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObject3);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void *)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     int imageWidth, imageHeight, numberChannels;
-    unsigned char* bytes = stbi_load("prototype_textures/prototype_grid_gray_2_512x512.png", &imageWidth, &imageHeight, &numberChannels, 0);
+    unsigned char *bytes = stbi_load("prototype_textures/prototype_grid_gray_2_512x512.png", &imageWidth, &imageHeight, &numberChannels, 0);
 
     GLuint texture;
     glGenTextures(1, &texture);
@@ -194,10 +185,8 @@ int main()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
-    while (!glfwWindowShouldClose(window))
-    {
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        {
+    while (!glfwWindowShouldClose(window)) {
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, true);
         }
 

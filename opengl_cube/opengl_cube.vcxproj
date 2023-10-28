@@ -35,9 +35,6 @@
     <Image Include="prototype_textures\prototype_grid_gray_3_512x512.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.gitattributes" />
-    <None Include="..\.gitignore" />
-    <None Include="..\README.md" />
     <None Include="shaders\frag.glsl" />
     <None Include="shaders\vert.glsl" />
   </ItemGroup>
