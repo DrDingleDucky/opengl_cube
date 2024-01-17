@@ -1,3 +1,5 @@
 # OpenGL Cube
 
-Playing around with OpenGL. 
+Playing around with OpenGL.
+
+![cube.png](README.assets/cube.png)
