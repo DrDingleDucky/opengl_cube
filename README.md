@@ -2,4 +2,4 @@
 
 Playing around with OpenGL.
 
-![cube.png](README.assets/cube.png)
+![cube.gif](README.assets/cube.gif)
